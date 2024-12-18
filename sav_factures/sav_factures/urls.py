@@ -18,12 +18,25 @@ from django.contrib import admin
 from django.urls import path, include
 from gestion import views
 
+# les routes pour la gestion des clients
+
 urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('gestion/', include('gestion.urls')),
     path('clients/', views.liste_clients, name='liste_clients'),  
-    path('clients/nouveau/', views.formulaire_client, name='nouveau_client'),
-    path('clients/<int:id>/modifier/', views.formulaire_client, name='modifier_client')
-   
+    path('clients/ajouter/', views.ajouter_client, name='ajouter_client'),
+    path('clients/<int:client_id>/modifier/',views.modifier_client,name='modifier_client'),
+    path('clients/<int:client_id>/supprimer/',views.supprimer_client,name='modifier_client'),
+]
+
+# les routes pour la gestion des ascenseurs
+urlpatterns = [
+
+    path('admin/', admin.site.urls),
+    path('gestion/', include('gestion.urls')),
+    path('ascenseur/', views.liste_ascenseurs, name='liste_ascenseurs'),  
+    path('ascenseur/ajouter/', views.ajouter_ascenseur, name='ajouter_ascenseur'),
+    path('ascenseur/<int:id>/modifier/',views.modifier_ascenseur,name='modifier_ascenseur'),
+    path('ascenseur/<int:id>/supprimer/',views.supprimer_ascenseur,name='modifier_ascenseur'),
 ]

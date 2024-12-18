@@ -1,0 +1,7 @@
+<h1>Supprimer l'ascenseur</h1>
+<p>Voulez-vous vraiment supprimer l'ascenseur {{ ascenseur }} ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmer</button>
+</form>
+<a href="{% url 'liste_ascenseurs' %}">Annuler</a>

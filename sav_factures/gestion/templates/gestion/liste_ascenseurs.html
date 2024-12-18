@@ -1,0 +1,35 @@
+<h1>Liste des ascenseurs</h1>
+<a href="{% url 'ajouter_ascenseur' %}">Ajouter un ascenseur</a>
+<table>
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Marque</th>
+            <th>Modèle</th>
+            <th>Numéro de série</th>
+            <th>Charge</th>
+            <th>Date d'installation</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ascenseur in ascenseurs %}
+        <tr>
+            <td>{{ ascenseur.client.nom }}</td>
+            <td>{{ ascenseur.marque }}</td>
+            <td>{{ ascenseur.modele }}</td>
+            <td>{{ ascenseur.numero_serie }}</td>
+            <td>{{ ascenseur.charge }}</td>
+            <td>{{ ascenseur.date_installation }}</td>
+            <td>
+                <a href="{% url 'modifier_ascenseur' ascenseur.id %}">Modifier</a>
+                <a href="{% url 'supprimer_ascenseur' ascenseur.id %}">Supprimer</a>
+            </td>
+        </tr>
+        {% empty %}
+                <tr>
+                    <td colspan="7">Aucun ascenseur disponible.</td>
+                </tr>
+        {% endfor %}
+    </tbody>
+</table>
