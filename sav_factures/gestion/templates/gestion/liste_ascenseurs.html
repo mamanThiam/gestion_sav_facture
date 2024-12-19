@@ -1,6 +1,5 @@
 <h1>Liste des ascenseurs</h1>
-<a href="{% url 'ajouter_ascenseur' %}">Ajouter un ascenseur</a>
-<table>
+<table border= "1">
     <thead>
         <tr>
             <th>Client</th>
@@ -31,5 +30,7 @@
                     <td colspan="7">Aucun ascenseur disponible.</td>
                 </tr>
         {% endfor %}
+        <a href="{% url 'ajouter_ascenseur' %}">Ajouter un ascenseur</a>
+        <br><br/>
     </tbody>
 </table>

@@ -6,8 +6,8 @@
     <title>Modifier un Client</title>
 </head>
 <body>
-    <h1>Modifier le Client : {{ client.nom }}</h1>
-    <form method="post">
+    <h1>Modifier le Client : {{ form.instance.client.nom }}</h1>
+    <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Enregistrer les modifications</button>

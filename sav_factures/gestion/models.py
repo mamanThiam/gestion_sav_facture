@@ -20,12 +20,12 @@ class Ascenseur(models.Model):
     charge = models.CharField(
         max_length=15, 
         choices=[
-            ('450', '450'), 
-            ('630', '630'), 
-            ('800', '800'), 
-            ('1000', '1000'), 
-            ('1500', '1500'), 
-            ('2000', '2000')
+            ('450 Kg', '450 Kg'), 
+            ('630 Kg', '630 Kg'), 
+            ('800 Kg', '800 Kg'), 
+            ('1000 Kg ', '1000 Kg'), 
+            ('1500 Kg', '1500 Kg'), 
+            ('2000 Kg', '2000 Kg')
         ]
     )
     date_installation = models.DateField()

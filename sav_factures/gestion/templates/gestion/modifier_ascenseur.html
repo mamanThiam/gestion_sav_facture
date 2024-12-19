@@ -1,5 +1,8 @@
-<h1>Modifier un ascenseur</h1>
-<form method="post">
+<title>Modifier un ascenseur</title>
+{% for ascenseur in ascenseurs %}
+<h1>Modifier l'ascenseur du client : {{ascenceur.client.nom }}</h1>
+{% endfor %}
+<form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Mettre à jour</button>

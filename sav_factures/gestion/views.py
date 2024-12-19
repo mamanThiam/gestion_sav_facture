@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404, redirect
 from .models import Client , Ascenseur
 from .forms import ClientForm
 from .forms import AscenseurForm
+from django.contrib import messages
 from django.http import HttpResponse
 
 #les vues pour la gestion des clients
@@ -54,8 +55,8 @@ def supprimer_client(request, client_id):
 
 #la vue pour la liste des ascenseurs
 def liste_ascenseurs(request):
-    ascenseur= Ascenseur.objects.all()
-    return render( request, 'gestion/liste_ascenseurs.html', {'ascenseur': ascenseur})
+    ascenseurs= Ascenseur.objects.all()
+    return render( request, 'gestion/liste_ascenseurs.html', {'ascenseurs': ascenseurs})
 
 #la vue pour ajouter un ascenseurs
 def ajouter_ascenseur(request):
@@ -66,16 +67,16 @@ def ajouter_ascenseur(request):
             return redirect('liste_ascenseurs')
     else:
         form=AscenseurForm()
-    return render(request, 'getsion/ajouter.ascenseur.html', {'form': form})
+    return render(request, 'gestion/ajouter_ascenseur.html', {'form': form})
 
 #la vue pour modifier un ascenseurs
 def modifier_ascenseur(request, id):
     ascenseur = get_object_or_404(Ascenseur, id=id)
     if request.method == "POST":
-        form = Ascenseur(request.form, instance= ascenseur)
+        form = AscenseurForm(request.POST, instance=ascenseur)
         if form.is_valid():
             form.save()
-            return redirect( 'gestion/liste_ascenseurs')
+            return redirect( 'liste_ascenseurs')
     else:
         form=AscenseurForm()
     return render(request, 'gestion/modifier_ascenseur.html', {'form': form, 'ascenseur': ascenseur})
@@ -84,10 +85,8 @@ def modifier_ascenseur(request, id):
 def supprimer_ascenseur(request, id):
     ascenseur =get_object_or_404(Ascenseur, id=id)
     if request.method == "POST":
-        form=Ascenseur(request.form, instance= ascenseur)
-        if form.is_valid():
-            form.save()
-            return redirect('liste_ascenseurs')
+        ascenseur.delete()
+        return redirect('liste_ascenseurs')
     else:
         form=AscenseurForm()
     return render (request, 'gestion/supprimer_ascenseur.html', {'form': form, 'ascenseur': ascenseur})

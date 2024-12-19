@@ -27,16 +27,12 @@ urlpatterns = [
     path('clients/', views.liste_clients, name='liste_clients'),  
     path('clients/ajouter/', views.ajouter_client, name='ajouter_client'),
     path('clients/<int:client_id>/modifier/',views.modifier_client,name='modifier_client'),
-    path('clients/<int:client_id>/supprimer/',views.supprimer_client,name='modifier_client'),
-]
-
+    path('clients/<int:client_id>/supprimer/',views.supprimer_client,name='supprimer_client'),
 # les routes pour la gestion des ascenseurs
-urlpatterns = [
-
-    path('admin/', admin.site.urls),
-    path('gestion/', include('gestion.urls')),
     path('ascenseur/', views.liste_ascenseurs, name='liste_ascenseurs'),  
     path('ascenseur/ajouter/', views.ajouter_ascenseur, name='ajouter_ascenseur'),
     path('ascenseur/<int:id>/modifier/',views.modifier_ascenseur,name='modifier_ascenseur'),
-    path('ascenseur/<int:id>/supprimer/',views.supprimer_ascenseur,name='modifier_ascenseur'),
+    path('ascenseur/<int:id>/supprimer/',views.supprimer_ascenseur,name='supprimer_ascenseur'),
+
 ]
+
