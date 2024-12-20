@@ -1,6 +1,29 @@
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% block content %}
 <h1>Ajouter un ascenseur</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Enregistrer</button>
 </form>
+<a href="{% url 'liste_ascenseurs' %}">Retour à la liste des clients</a>
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if messages %}
+            {% for message in messages %}
+                setTimeout(function(){
+                  Swal.fire({
+                      title: "{{ message.tags|capfirst }}",
+                      text: "{{ message }}",
+                      icon: "{{ message.tags }}", // success, error, warning, info
+                      confirmButtonText: "OK"
+                  });
+                } , 500 );
+            {% endfor %}
+        {% endif %}
+    });
+</script>

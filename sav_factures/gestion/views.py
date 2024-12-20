@@ -9,17 +9,17 @@ from django.http import HttpResponse
 # liste des clients
 def liste_clients(request):
     clients = Client.objects.all()
-    return render (request, 'gestion/liste_clients.html',{'clients': clients})
+    return render(request, 'gestion/liste_clients.html',{'clients': clients})
 
 
 #Vue pour ajouter un client
 #fonction : formulaire pour ajouter un client
-
 def ajouter_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()  # Enregistre le client dans la base de données
+            messages.success(request, "Le client a été ajouté avec succès.")
             return redirect('liste_clients')  # Redirige vers la liste des clients
     else:
         form = ClientForm()
@@ -33,6 +33,7 @@ def modifier_client(request, client_id):
         form = ClientForm(request.POST, instance=client)  #instanciation de la variable client
         if form.is_valid():
             form.save()  #Enregistrer les modifications
+            messages.success(request, "Le client a été modifié avec succès.")
             return redirect ('liste_clients')  #rediriger vers la page liste_clients aprés modifications
     else:
         form = ClientForm(instance=client)
@@ -45,6 +46,7 @@ def supprimer_client(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     if request.method == "POST":
         client.delete()  #supprimer le client
+        messages.success(request, "Le client a été supprimé avec succès.")
         return redirect('liste_clients') #rediriger vers la liste des clients
     #  page pour confirmer la suppression
     return render(request, 'gestion/supprimer_client.html', {'client': client})
@@ -64,6 +66,7 @@ def ajouter_ascenseur(request):
         form = AscenseurForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "L'ascenseur a été ajouté avec succès.")
             return redirect('liste_ascenseurs')
     else:
         form=AscenseurForm()
@@ -76,6 +79,7 @@ def modifier_ascenseur(request, id):
         form = AscenseurForm(request.POST, instance=ascenseur)
         if form.is_valid():
             form.save()
+            messages.success(request, "L'ascenseur a été modifié avec succès.")
             return redirect( 'liste_ascenseurs')
     else:
         form=AscenseurForm()
@@ -86,6 +90,7 @@ def supprimer_ascenseur(request, id):
     ascenseur =get_object_or_404(Ascenseur, id=id)
     if request.method == "POST":
         ascenseur.delete()
+        messages.success(request, "L'ascenseur a été supprimé avec succès.")
         return redirect('liste_ascenseurs')
     else:
         form=AscenseurForm()

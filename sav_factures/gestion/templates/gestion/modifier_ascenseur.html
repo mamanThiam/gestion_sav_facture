@@ -1,3 +1,7 @@
+{% load static %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <title>Modifier un ascenseur</title>
 {% for ascenseur in ascenseurs %}
 <h1>Modifier l'ascenseur du client : {{ascenceur.client.nom }}</h1>
@@ -7,3 +11,19 @@
     {{ form.as_p }}
     <button type="submit">Mettre à jour</button>
 </form>
+<a href="{% url 'liste_ascenseurs' %}">Retour à la liste des ascenseurs</a>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      {% if messages %}
+          {% for message in messages %}
+              Swal.fire({
+                  title: "{{ message.tags|capfirst }}",
+                  text: "{{ message }}",
+                  icon: "{{ message.tags }}", // success, error, warning, info
+                  confirmButtonText: "OK"
+              });
+          {% endfor %}
+      {% endif %}
+  });
+</script>

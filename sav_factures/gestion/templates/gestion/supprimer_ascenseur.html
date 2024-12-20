@@ -1,10 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Confirmer la suppression</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Pour des alertes avancées -->
+
 </head>
 <body>
+{%block content%}
+  
     <h2>Voulez-vous vraiment supprimer cet ascenseur ?</h2>
     <p>Ascenseur du client : {{ascenseur.client.nom}}</p> <!-- Remplacez `nom` par le champ pertinent de votre modèle -->
     <form method="POST">
@@ -12,5 +17,20 @@
         <button type="submit">Oui, supprimer</button>
         <a href="{% url 'liste_ascenseurs' %}">Annuler</a> <!-- Remplacez 'nom_de_la_vue_de_liste' -->
     </form>
+ {%endblock%}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire({
+                        title: "{{ message.tags|capfirst }}",
+                        text: "{{ message }}",
+                        icon: "{{ message.tags }}", // success, error, warning, info
+                        confirmButtonText: "OK"
+                    });
+                {% endfor %}
+            {% endif %}
+        });
+      </script>
 </body>
 </html>
