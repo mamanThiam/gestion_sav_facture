@@ -7,6 +7,10 @@
 </head>
 <body>
     <h1>Liste des Clients</h1>
+    <form method= "GET" action="{% url 'liste_clients' %}">
+        <input type="text" name="q" placeholder=" Rechercher un client ..."  value="{{request.GET.get}}">
+        <button type= "submit">Rechercher </button>
+    </form>
     <table border="1">
         <thead>
             <tr>
@@ -33,7 +37,13 @@
         </tbody>
     </table>
     <br></br>
-    <a href="{% url 'ajouter_client' %}">Ajouter un nouveau client</a>
+    <a href="{% url 'ajouter_client' %}">Ajouter un nouveau client</a><br></br>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'rapport_clients_pdf' %}" class="btn btn-primary">
+            Télécharger Rapport Clients (PDF)
+        </a>
+    </div>
+    
 
 </body>
 </html>

@@ -33,6 +33,8 @@ urlpatterns = [
     path('ascenseur/ajouter/', views.ajouter_ascenseur, name='ajouter_ascenseur'),
     path('ascenseur/<int:id>/modifier/',views.modifier_ascenseur,name='modifier_ascenseur'),
     path('ascenseur/<int:id>/supprimer/',views.supprimer_ascenseur,name='supprimer_ascenseur'),
-
+#les routes pour les rapports des clients et des ascenseurs
+    path('rapport/clients/pdf/', views.rapport_clients_pdf, name='rapport_clients_pdf'),
+    path('rapport/ascenseurs/excel/', views.rapport_ascenseurs_excel, name='rapport_ascenseurs_excel')
 ]
 
