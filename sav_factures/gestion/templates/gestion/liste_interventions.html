@@ -1,0 +1,41 @@
+<h1> Liste des Interventions</h1>
+<form method= "GET" action="{% url 'liste_interventions'%}">
+    <input type="text" name="q" placeholder=" Rechercher une interventiin ..."  value="{{request.GET.get}}">
+    <button type= "submit">Rechercher </button>
+</form>
+<table border= "1">
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Adresse</th>
+            <th>Ascenseur</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Technicien</th>
+            <th>Statut</th>
+            <th>Fichier PVA</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    {% for intervention in interventions %}
+    <tr>
+        <td>{{ intervention.client.nom }}</td>
+        <td>{{ intervention.adresse }}</td>
+        <td>{{ intervention.ascenseur }}</td>
+        <td>{{ intervention.date_intervention }}</td>
+        <td>{{ intervention.get_type_intervention_display }}</td>
+        <td>{{ intervention.technicien }}</td>
+        <td>{{ intervention.get_statut_display }}</td>
+        <td>
+            {% if intervention.fichier_pva %}
+            <a href="{{ intervention.fichier_pva.url }}">Télécharger</a>
+            {% else %}
+            Aucun fichier
+            {% endif %}
+        </td>
+        <td>{{ intervention.note }}</td>
+    </tr>
+    {% endfor %}
+</table><br></br>
+<a href="{% url 'ajouter_intervention' %}">Ajouter une intervention</a>
+

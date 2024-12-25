@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User   #les techniciens utilisent le système d'authentification par  défaut Django
 
 # Table Client
 class Client(models.Model):
@@ -31,31 +32,40 @@ class Ascenseur(models.Model):
     date_installation = models.DateField()
 
     def __str__(self):
-        return f"{self.marque} - {self.modele} - {self.numero_serie}"
+        return f"{self.marque} - {self.modele} "
 
 # Table Intervention
 class Intervention(models.Model):
-    ascenseur = models.ForeignKey(Ascenseur, on_delete=models.CASCADE, related_name="interventions")
-    technicien = models.CharField(max_length=255)
-    statut = models.CharField(
-        max_length=50, 
-        choices=[
-            ('En cours', 'En cours'), 
-            ('Terminé', 'Terminé')
-        ]
-    )
-    type_intervention = models.CharField(
-        max_length=15, 
-        choices=[
-            ('Entretien', 'Entretien'), 
-            ('Réparation', 'Réparation'), 
-            ('Diagnostic', 'Diagnostic')
-        ]
-    )
-    date = models.DateField()
+  from django.db import models
+
+class Intervention(models.Model):
+    STATUS = [
+        ('planifiée', 'Planifiée'),
+        ('en cours', 'En cours'),
+        ('terminée', 'Terminée'),
+    ]
+    
+    TYPE = [
+        ('maintenance', 'Maintenance'),
+        ('reparation', 'Réparation'),
+        ('installation', 'Installation'),
+        ('autre', 'Autre'),
+    ]
+
+    ascenseur = models.ForeignKey('Ascenseur', on_delete=models.CASCADE, related_name='interventions',default=1)
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='interventions', default= 1)  # Lien avec le client
+    adresse = models.CharField(max_length=255,default="Adresse Inconnue")  # Adresse où l'intervention a lieu
+    date_intervention = models.DateField()
+    type_intervention = models.CharField(max_length=20, choices=TYPE)
+    technicien = models.CharField(max_length=100)
+    statut = models.CharField(max_length=20, choices=STATUS, default='planifiée')  # Statut de l'intervention
+    fichier_pva = models.FileField(upload_to='pva_files/', blank=True, null=True)  # Fichier PVA scanné
+    note = models.TextField(blank=True, null=True)  # Note ou observation pour le technicien
 
     def __str__(self):
-        return f"Intervention {self.type_intervention} sur {self.ascenseur}"
+        return f"{self.type_intervention} ({self.statut}) - {self.date_intervention} - {self.technicien}"
+
+
 
 # Table Facture
 class Facture(models.Model):

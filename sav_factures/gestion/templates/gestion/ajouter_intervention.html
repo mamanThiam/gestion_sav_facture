@@ -1,0 +1,37 @@
+{%block content%}
+<h2>Ajouter une intervention</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-group">
+        <label for="id_pva_file">Fichier PVA (scanné ou téléchargé) :</label>
+        <input type="file" name="pva_file" id="id_pva_file" class="form-control">
+        <button id="scan-button" class="btn btn-secondary">Scanner un document</button>
+        <div id="scan-result"></div>
+    </div>
+    <button type="submit">Enregistrer</button>
+</form>
+{%endblock%}
+<script src="path/to/scanner-library.js"></script>
+<script>
+    document.getElementById('scan-button').addEventListener('click', function () {
+        // Exemple avec Dynamsoft ou autre bibliothèque
+        // Appeler une fonction de scan ici et afficher le fichier scanné
+        alert('Fonction de scan à intégrer ici.');
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    title: "{{ message.tags|capfirst }}",
+                    text: "{{ message }}",
+                    icon: "{{ message.tags }}", // success, error, warning, info
+                    confirmButtonText: "OK"
+                });
+            {% endfor %}
+        {% endif %}
+    });
+</script>

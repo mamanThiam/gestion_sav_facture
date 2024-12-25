@@ -1,7 +1,8 @@
 from django.shortcuts import render,get_object_or_404, redirect
-from .models import Client , Ascenseur
+from .models import Client , Ascenseur, Intervention
 from .forms import ClientForm
 from .forms import AscenseurForm
+from .forms import InterventionForm
 from django.contrib import messages
 from django.db.models import Q
 from reportlab.pdfgen import canvas
@@ -157,3 +158,29 @@ def rapport_ascenseurs_excel(request):
     response['Conten_Disposition']= 'attachment;filename="Rapport_ascenseur.xlsx"'
     wb.save(response)
     return response
+
+#vues pour intervention
+def liste_interventions(request):
+    query = request.GET.get('q')
+    if query:
+        interventions = Intervention.objet.filter(
+            Q(date_intevention__icontains=query) | #recherche par date d'intervention
+            Q(type_intervention__icontains=query) | #recherche par type d'intervention
+            Q(technicien__icontains=query) #recherche par technicien intervenue
+        )
+
+    else:
+        interventions = Intervention.objects.all().order_by('-date_intervention')
+    return render( request, 'gestion/liste_interventions.html', {'interventions': interventions})    
+
+#la vue pour ajouter un ascenseurs
+def ajouter_intervention(request):
+    if request.method == "POST":
+        form = InterventionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "L'intervention a été ajouté avec succès.")
+            return redirect('liste_interventions')
+    else:
+        form=InterventionForm()
+    return render(request, 'gestion/ajouter_intervention.html', {'form': form})

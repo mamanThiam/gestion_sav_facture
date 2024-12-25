@@ -17,10 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from gestion import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+
 
 # les routes pour la gestion des clients
 
-urlpatterns = [
+urlpatterns=[
 
     path('admin/', admin.site.urls),
     path('gestion/', include('gestion.urls')),
@@ -35,6 +40,12 @@ urlpatterns = [
     path('ascenseur/<int:id>/supprimer/',views.supprimer_ascenseur,name='supprimer_ascenseur'),
 #les routes pour les rapports des clients et des ascenseurs
     path('rapport/clients/pdf/', views.rapport_clients_pdf, name='rapport_clients_pdf'),
-    path('rapport/ascenseurs/excel/', views.rapport_ascenseurs_excel, name='rapport_ascenseurs_excel')
+    path('rapport/ascenseurs/excel/', views.rapport_ascenseurs_excel, name='rapport_ascenseurs_excel'),
+#les routes pour les interventions
+    path('intervention/', views.liste_interventions, name='liste_interventions'),  
+    path('intervention/ajouter/', views.ajouter_intervention, name='ajouter_intervention'),
 ]
 
+# Ajouter cette ligne uniquement en mode développement
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
