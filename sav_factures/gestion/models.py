@@ -65,6 +65,13 @@ class Intervention(models.Model):
     def __str__(self):
         return f"{self.type_intervention} ({self.statut}) - {self.date_intervention} - {self.technicien}"
 
+from django.conf import settings
+
+class Intervention(models.Model):
+    ...
+    technicien = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    ...
+
 
 
 # Table Facture

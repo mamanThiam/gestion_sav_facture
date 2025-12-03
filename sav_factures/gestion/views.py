@@ -61,21 +61,23 @@ def supprimer_client(request, client_id):
 #  page pour confirmer la suppression
     return render(request, 'gestion/supprimer_client.html', {'client': client})
 
-#Rapport en pdf
+# Rapport clients PDF
 def rapport_clients_pdf(request):
-# Création de la reponse http avec une en-tete pdf
-    response = HttpResponse(content_type ='application/pdf')
-    response['Content_Disposition'] = 'attachment; filename= "rapport_clients.pdf"'
-#Génération du document pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="rapport_clients.pdf"'
+
     pdf_canvas = canvas.Canvas(response)
-    pdf_canvas.setFont("Times New Roman", 12 )
-    pdf_canvas.drawString(100,800,"Rapport des clients")
-#Recupération des données des clients
-    clients = Client.object.all()
+    pdf_canvas.setFont("Times-Roman", 12)
+    pdf_canvas.drawString(100, 800, "Rapport des clients")
+
+    clients = Client.objects.all()  # <-- objects
     y_position = 750
     for client in clients:
-        pdf_canvas.drawString(100,y_position, f"Nom:{client.nom}, Téléphone:{client.telephone}, Adresse:{client.adresse}")
+        pdf_canvas.drawString(100, y_position, f"Nom: {client.nom}, Téléphone: {client.telephone}, Adresse: {client.adresse}")
         y_position -= 20
+        if y_position < 50:
+            pdf_canvas.showPage()
+            y_position = 800
 
     pdf_canvas.save()
     return response
@@ -122,29 +124,27 @@ def modifier_ascenseur(request, id):
         form=AscenseurForm()
     return render(request, 'gestion/modifier_ascenseur.html', {'form': form, 'ascenseur': ascenseur})
 
-#la vue pour supprimer un ascenseurs
 def supprimer_ascenseur(request, id):
-    ascenseur =get_object_or_404(Ascenseur, id=id)
+    ascenseur = get_object_or_404(Ascenseur, id=id)
     if request.method == "POST":
         ascenseur.delete()
         messages.success(request, "L'ascenseur a été supprimé avec succès.")
         return redirect('liste_ascenseurs')
-    return render (request, 'gestion/supprimer_ascenseur.html', {'form': form, 'ascenseur': ascenseur})
-        
+    # Si GET, rendre une page de confirmation sans form variable
+    return render(request, 'gestion/supprimer_ascenseur.html', {'ascenseur': ascenseur})
+
 
 #Rapport en excel
+# Rapport ascenseurs Excel
 def rapport_ascenseurs_excel(request):
-    #creation du fichier excel
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Rapport des ascenseurs"
 
-    #En-tete
-    headers = ["Client","Marque","Modèle","Numero de Série","Date d'installaion"]
+    headers = ["Client", "Marque", "Modèle", "Numero de Série", "Date d'installation"]
     ws.append(headers)
 
-    #données des ascenseurs
-    ascenseurs = Ascenseur.object.all()
+    ascenseurs = Ascenseur.objects.all()  # <-- objects
     for ascenseur in ascenseurs:
         ws.append([
             ascenseur.client.nom if ascenseur.client else "",
@@ -153,25 +153,27 @@ def rapport_ascenseurs_excel(request):
             ascenseur.numero_serie,
             ascenseur.date_installation.strftime('%d-%m-%Y') if ascenseur.date_installation else ""
         ])
-    # Envoi de la reponse
-    response =HttpResponse(content_type="application/vnd.openpyxmlformats-officedocument.spreadsheetml.sheet")
-    response['Conten_Disposition']= 'attachment;filename="Rapport_ascenseur.xlsx"'
+
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = 'attachment; filename="Rapport_ascenseur.xlsx"'
     wb.save(response)
     return response
 
-#vues pour intervention
+from django.db.models import Q
+from django.utils.dateparse import parse_date
+
 def liste_interventions(request):
     query = request.GET.get('q')
     if query:
-        interventions = Intervention.objet.filter(
-            Q(date_intevention__icontains=query) | #recherche par date d'intervention
+        # si on veut rechercher sur texte
+        interventions = Intervention.objects.filter(
             Q(type_intervention__icontains=query) | #recherche par type d'intervention
-            Q(technicien__icontains=query) #recherche par technicien intervenue
-        )
-
+            Q(technicien__icontains=query) | #recherche par nom du technicien
+            Q(date_intervention__icontains=query) #recherche par date d'intervention
+        ).order_by('-date_intervention')
     else:
         interventions = Intervention.objects.all().order_by('-date_intervention')
-    return render( request, 'gestion/liste_interventions.html', {'interventions': interventions})    
+    return render(request, 'gestion/liste_interventions.html', {'interventions': interventions})
 
 #la vue pour ajouter un ascenseurs
 def ajouter_intervention(request):
