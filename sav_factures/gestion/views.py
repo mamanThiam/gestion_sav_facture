@@ -5,9 +5,9 @@ from .forms import AscenseurForm
 from .forms import InterventionForm
 from django.contrib import messages
 from django.db.models import Q
-from reportlab.pdfgen import canvas
+# from reportlab.pdfgen import canvas
 from django.http import HttpResponse
-import openpyxl
+# import openpyxl
 #les vues pour la gestion des clients
 # liste des clients
 def liste_clients(request):
