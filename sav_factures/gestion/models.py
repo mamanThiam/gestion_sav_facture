@@ -6,9 +6,14 @@
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+settings.AUTH_USER_MODEL
 
-
+ 
 # --- Client ---
 class Client(models.Model):
     nom = models.CharField(max_length=255)
@@ -68,12 +73,20 @@ class Intervention(models.Model):
     adresse = models.CharField(max_length=255, default="Adresse inconnue")
     date_intervention = models.DateField()
     type_intervention = models.CharField(max_length=20, choices=TYPE)
-    technicien = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    technicien = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='interventions'
+    )
+
     statut = models.CharField(max_length=20, choices=STATUS, default='planifiée')
     fichier_pva = models.FileField(upload_to='pva_files/', blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.type_intervention} - {self.date_intervention}"
+
 
 

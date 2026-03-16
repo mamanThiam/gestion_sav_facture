@@ -71,3 +71,9 @@ sav_factures/
 │   └── urls.py              # URLs globales du projet
 │
 └── env/                     # Virtual environment
+
+## Authentification
+- Backend : Django REST + JWT
+- Endpoint login : /api/auth/login/
+- Frontend : Lovable
+- Token stocké côté frontend

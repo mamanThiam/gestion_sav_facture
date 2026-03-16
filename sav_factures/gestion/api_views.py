@@ -10,6 +10,7 @@ from .models import Client
 from .serializers import ClientSerializer
 from .models import Ascenseur, Intervention
 from .serializers import AscenseurSerializer, InterventionSerializer
+from rest_framework import generics
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
@@ -52,3 +53,30 @@ class InterventionViewSet(viewsets.ModelViewSet):
     serializer_class = InterventionSerializer
     permission_classes = [permissions.AllowAny]
 
+
+
+class ClientListCreate(generics.ListCreateAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
+class ClientRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
+
+class AscenseurListCreate(generics.ListCreateAPIView):
+    queryset = Ascenseur.objects.all()
+    serializer_class = AscenseurSerializer
+
+class AscenseurRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Ascenseur.objects.all()
+    serializer_class = AscenseurSerializer
+
+
+class InterventionListCreate(generics.ListCreateAPIView):
+    queryset = Intervention.objects.all()
+    serializer_class = InterventionSerializer
+
+class InterventionRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Intervention.objects.all()
+    serializer_class = InterventionSerializer
