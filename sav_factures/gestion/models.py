@@ -15,11 +15,23 @@ settings.AUTH_USER_MODEL
 
  
 # --- Client ---
+# --- Client ---
 class Client(models.Model):
+    STATUS_CHOICES = [
+        ('actif', 'Actif'),
+        ('inactif', 'Inactif'),
+        ('suspendu', 'Suspendu'),
+    ]
+    
     nom = models.CharField(max_length=255)
     adresse = models.TextField()
     email = models.EmailField(unique=True)
     telephone = models.CharField(max_length=15)
+    personne_de_contact = models.CharField(max_length=255, blank=True, null=True)
+    ville = models.CharField(max_length=100, blank=True, null=True)
+    code_postal = models.CharField(max_length=10, blank=True, null=True)
+    statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='actif')
+    notes = models.TextField(blank=True, null=True)
 
     def clean(self):
         if not self.telephone.isdigit():
@@ -28,12 +40,20 @@ class Client(models.Model):
     def __str__(self):
         return self.nom
 
-
 # --- Ascenseur ---
 class Ascenseur(models.Model):
+    STATUS_CHOICES = [
+        ('operationnel', 'Opérationnel'),
+        ('maintenance', 'En maintenance'),
+        ('hors_service', 'Hors service'),
+        ('suspendu', 'Suspendu'),
+    ]
+    
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="ascenseurs")
+    nom = models.CharField(max_length=255, blank=True, null=True)  # Nom de l'ascenseur
+    emplacement = models.CharField(max_length=255, blank=True, null=True)  # Localisation
     modele = models.CharField(max_length=255)
-    marque = models.CharField(max_length=50)
+    marque = models.CharField(max_length=50)  # fabricant
     numero_serie = models.CharField(max_length=255, unique=True)
     charge = models.CharField(
         max_length=15,
@@ -46,7 +66,13 @@ class Ascenseur(models.Model):
             ('2000 Kg', '2000 Kg'),
         ]
     )
-    date_installation = models.DateField()
+    capacite = models.CharField(max_length=50, blank=True, null=True)  # capacités
+    nombre_etages = models.IntegerField(blank=True, null=True)  # nombre d'étages
+    date_installation = models.DateField()  # année d'installation
+    statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='operationnel')
+    dernier_maintenance = models.DateField(blank=True, null=True)  # dernier jour maintenance
+    prochain_maintenance = models.DateField(blank=True, null=True)  # prochain jours maintenance
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.marque} - {self.modele}"
@@ -54,25 +80,31 @@ class Ascenseur(models.Model):
 
 # --- Intervention ---
 class Intervention(models.Model):
+    PRIORITY_CHOICES = [
+        ('low', 'Basse'),
+        ('medium', 'Moyenne'),
+        ('high', 'Haute'),
+        ('critical', 'Critique'),
+    ]
 
     STATUS = [
-        ('planifiée', 'Planifiée'),
-        ('en cours', 'En cours'),
-        ('terminée', 'Terminée'),
+        ('scheduled', 'Planifiée'),
+        ('in-progress', 'En cours'),
+        ('completed', 'Terminée'),
+        ('cancelled', 'Annulée'),
     ]
 
     TYPE = [
         ('maintenance', 'Maintenance'),
-        ('reparation', 'Réparation'),
-        ('installation', 'Installation'),
-        ('autre', 'Autre'),
+        ('repair', 'Réparation'),
+        ('inspection', 'Contrôle'),
     ]
 
     ascenseur = models.ForeignKey(Ascenseur, on_delete=models.CASCADE, related_name='interventions')
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='interventions')
-    adresse = models.CharField(max_length=255, default="Adresse inconnue")
     date_intervention = models.DateField()
+    duration = models.CharField(max_length=50, blank=True, null=True)  # durée estimée
     type_intervention = models.CharField(max_length=20, choices=TYPE)
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
     technicien = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -80,13 +112,10 @@ class Intervention(models.Model):
         blank=True,
         related_name='interventions'
     )
-
-    statut = models.CharField(max_length=20, choices=STATUS, default='planifiée')
+    statut = models.CharField(max_length=20, choices=STATUS, default='scheduled')
     fichier_pva = models.FileField(upload_to='pva_files/', blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)  # description/notes
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.type_intervention} - {self.date_intervention}"
-
-
-

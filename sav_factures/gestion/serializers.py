@@ -13,7 +13,7 @@ from .models import Client, Ascenseur, Intervention
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ["id", "nom", "adresse", "email", "telephone"]
+        fields = ["id", "nom", "adresse", "email", "telephone", "personne_de_contact", "ville", "code_postal", "statut", "notes"]
 
 class AscenseurSerializer(serializers.ModelSerializer):
     client = ClientSerializer(read_only=True)
@@ -26,10 +26,11 @@ class AscenseurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ascenseur
         fields = [
-            "id", "client", "client_id",
-            "modele", "marque", "numero_serie",
-            "charge", "date_installation"
-        ]
+                "id", "client", "nom", "emplacement", "modele", "marque",
+                "numero_serie", "charge", "capacite", "nombre_etages",
+                "date_installation", "statut", "dernier_maintenance",
+                "prochain_maintenance", "notes"
+            ]
 
 class InterventionSerializer(serializers.ModelSerializer):
     ascenseur = AscenseurSerializer(read_only=True)
@@ -48,10 +49,8 @@ class InterventionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Intervention
         fields = [
-            "id", "ascenseur", "ascenseur_id",
-            "client", "client_id",
-            "adresse", "date_intervention",
-            "type_intervention", "technicien",
-            "statut", "fichier_pva", "note"
-        ]
-
+                "id", "ascenseur",
+                "date_intervention", "duration",
+                "type_intervention", "priority", "technicien",
+                "statut", "description","notes", "fichier_pva",
+            ]

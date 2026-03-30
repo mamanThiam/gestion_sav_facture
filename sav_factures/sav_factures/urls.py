@@ -11,14 +11,15 @@ urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
 
-    # API REST (Lovable utilisera uniquement ces routes)
-    path('api/', include('gestion.api_urls')),  # <-- API propre via router
 
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+      # API REST (Lovable utilisera uniquement ces routes)
+    path('api/', include('gestion.api_urls')),  # <-- API propre via router
+    
     # Anciennes pages HTML (optionnelles)
     path('', include('gestion.urls')),  # <-- Toutes les vues Django classiques
-
-    path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # Fichiers médias (développement uniquement)
