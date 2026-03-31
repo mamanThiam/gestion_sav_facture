@@ -8,7 +8,7 @@
 # Voici le code complet pour les serializers dans gestion/serializers.py : 
 
 from rest_framework import serializers
-from .models import Client, Ascenseur, Intervention
+from .models import Client, Ascenseur, Intervention, User
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,8 @@ class InterventionSerializer(serializers.ModelSerializer):
                 "type_intervention", "priority", "technicien",
                 "statut", "description","notes", "fichier_pva",
             ]
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "nom", "email", "role", "statut"]

@@ -8,9 +8,9 @@
 from rest_framework import viewsets, permissions
 from .models import Client
 from .serializers import ClientSerializer
-from .models import Ascenseur, Intervention
-from .serializers import AscenseurSerializer, InterventionSerializer
-from rest_framework.permissions import IsAuthenticated
+from .models import Ascenseur, Intervention, User
+from .serializers import AscenseurSerializer, InterventionSerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
@@ -25,7 +25,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer
     # Pour l'instant en dev, on autorise tout.
     # Plus tard on mettra IsAuthenticated ou des permissions basées sur rôles.
-    permission_classes = ["AllowAny"]
+    permission_classes = [AllowAny]
 
 
 
@@ -40,7 +40,7 @@ class AscenseurViewSet(viewsets.ModelViewSet):
     """
     queryset = Ascenseur.objects.all().order_by('id')
     serializer_class = AscenseurSerializer
-    permission_classes = ["AllowAny"]
+    permission_classes = [AllowAny]
 
 class InterventionViewSet(viewsets.ModelViewSet):
     """
@@ -53,5 +53,17 @@ class InterventionViewSet(viewsets.ModelViewSet):
     """
     queryset = Intervention.objects.all().order_by('id')
     serializer_class = InterventionSerializer
-    permission_classes = ["AllowAny"]
+    permission_classes = [AllowAny]
 
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API CRUD pour les Users.
+    GET /api/users/        -> liste
+    POST /api/users/       -> création
+    GET /api/users/{pk}/   -> détail
+    PUT/PATCH /api/users/{pk}/ -> modifier
+    DELETE /api/users/{pk}/ -> supprimer
+    """
+    queryset = User.objects.all().order_by('id')
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]

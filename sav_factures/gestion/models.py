@@ -119,3 +119,14 @@ class Intervention(models.Model):
 
     def __str__(self):
         return f"{self.type_intervention} - {self.date_intervention}"
+
+
+# model User
+class User(models.Model):
+    nom = models.CharField(max_length=255)
+    email=models.EmailField(unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=50)  # Rôle de l'utilisateur (ex: admin, technicien, etc.)
+    statut=models.CharField(max_length=20, choices=[('actif', 'Actif'), ('inactif', 'Inactif')], default='actif')
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
