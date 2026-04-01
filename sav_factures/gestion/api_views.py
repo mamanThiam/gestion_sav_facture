@@ -42,6 +42,11 @@ class AscenseurViewSet(viewsets.ModelViewSet):
     serializer_class = AscenseurSerializer
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+            print(f"REQUEST DATA: {request.data}")
+            print(f"REQUEST ERRORS: {request.errors if hasattr(request, 'errors') else 'None'}")
+            return super().create(request, *args, **kwargs)
+
 class InterventionViewSet(viewsets.ModelViewSet):
     """
     API CRUD pour les Interventions.

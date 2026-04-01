@@ -11,7 +11,7 @@ class ClientForm(forms.ModelForm):
 class AscenseurForm(forms.ModelForm):
     class Meta:
         model = Ascenseur
-        fields = ['client', 'marque', 'charge','modele','numero_serie','date_installation']
+        fields = ['client', 'marque', 'charge','modele','numero_serie','annee_installation']
 
 #form pour intervention
 class InterventionForm(forms.ModelForm):

@@ -48,13 +48,12 @@ class Ascenseur(models.Model):
         ('hors_service', 'Hors service'),
         ('suspendu', 'Suspendu'),
     ]
-    
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="ascenseurs")
     nom = models.CharField(max_length=255, blank=True, null=True)  # Nom de l'ascenseur
     emplacement = models.CharField(max_length=255, blank=True, null=True)  # Localisation
-    modele = models.CharField(max_length=255)
+    modele = models.CharField(max_length=255, blank=True, null=True)  # modèle de l'ascenseur
     marque = models.CharField(max_length=50)  # fabricant
-    numero_serie = models.CharField(max_length=255, unique=True)
+    numero_serie = models.CharField(max_length=255, blank=True, null=True)  # numéro de série
     charge = models.CharField(
         max_length=15,
         choices=[
@@ -68,7 +67,7 @@ class Ascenseur(models.Model):
     )
     capacite = models.CharField(max_length=50, blank=True, null=True)  # capacités
     nombre_etages = models.IntegerField(blank=True, null=True)  # nombre d'étages
-    date_installation = models.DateField()  # année d'installation
+    annee_installation = models.DateField()  # année d'installation
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='operationnel')
     dernier_maintenance = models.DateField(blank=True, null=True)  # dernier jour maintenance
     prochain_maintenance = models.DateField(blank=True, null=True)  # prochain jours maintenance
