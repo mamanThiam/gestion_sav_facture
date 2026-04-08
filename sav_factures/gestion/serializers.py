@@ -7,6 +7,8 @@
 # Ils gèrent également les relations entre les modèles en utilisant des champs liés.
 # Voici le code complet pour les serializers dans gestion/serializers.py : 
 
+from urllib import response
+
 from rest_framework import serializers
 from .models import Client, Ascenseur, Intervention, User
 
@@ -32,32 +34,27 @@ class AscenseurSerializer(serializers.ModelSerializer):
             serializer = self.get_serializer(data=request.data)
             if not serializer.is_valid():
                 print(f"SERIALIZER ERRORS: {serializer.errors}")
-                return Response(serializer.errors, status=400)
+                return response(serializer.errors, status=400)
             return super().create(request, *args, **kwargs)
 
 
 class InterventionSerializer(serializers.ModelSerializer):
-    ascenseur = AscenseurSerializer(read_only=True)
-    ascenseur_id = serializers.PrimaryKeyRelatedField(
-        queryset=Ascenseur.objects.all(),
-        source="ascenseur",
-        write_only=True
-    )
-    client = ClientSerializer(read_only=True)
-    client_id = serializers.PrimaryKeyRelatedField(
-        queryset=Client.objects.all(),
-        source="client",
-        write_only=True
-    )
-
     class Meta:
         model = Intervention
         fields = [
-                "id", "ascenseur",
-                "date_intervention", "duration",
+                "id","title", "ascenseur", "client",
+                "date_intervention", "duration","location",
                 "type_intervention", "priority", "technicien",
-                "statut", "description","notes", "fichier_pva",
+                "statut", "description","notes", 
             ]
+
+        def create(self, request, *args, **kwargs):
+            print(f"REQUEST DATA: {request.data}")
+            serializer = self.get_serializer(data=request.data)
+            if not serializer.is_valid():
+                print(f"SERIALIZER ERRORS: {serializer.errors}")
+                return response(serializer.errors, status=400)
+            return super().create(request, *args, **kwargs)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

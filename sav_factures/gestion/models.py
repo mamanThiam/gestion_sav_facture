@@ -80,30 +80,32 @@ class Ascenseur(models.Model):
 # --- Intervention ---
 class Intervention(models.Model):
     PRIORITY_CHOICES = [
-        ('low', 'Basse'),
-        ('medium', 'Moyenne'),
-        ('high', 'Haute'),
-        ('critical', 'Critique'),
+        ('basse', 'Basse'),
+        ('moyenne', 'Moyenne'),
+        ('haute', 'Haute'),
+        ('critique', 'Critique'),
     ]
 
     STATUS = [
-        ('scheduled', 'Planifiée'),
-        ('in-progress', 'En cours'),
-        ('completed', 'Terminée'),
-        ('cancelled', 'Annulée'),
+        ('planifiee', 'Planifiée'),
+        ('en_cours', 'En cours'),
+        ('terminee', 'Terminée'),
+        ('annulee', 'Annulée'),
     ]
 
     TYPE = [
         ('maintenance', 'Maintenance'),
-        ('repair', 'Réparation'),
-        ('inspection', 'Contrôle'),
+        ('reparation', 'Réparation'),
+        ('controle', 'Contrôle'),
     ]
-
+    title = models.CharField(max_length=255, blank=True, null=True)  # titre de l'intervention
+    location = models.CharField(max_length=255, blank=True, null=True)  # lieu de l'intervention
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='interventions', blank=True, null=True)
     ascenseur = models.ForeignKey(Ascenseur, on_delete=models.CASCADE, related_name='interventions')
     date_intervention = models.DateField()
     duration = models.CharField(max_length=50, blank=True, null=True)  # durée estimée
     type_intervention = models.CharField(max_length=20, choices=TYPE)
-    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='moyenne')
     technicien = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -111,8 +113,7 @@ class Intervention(models.Model):
         blank=True,
         related_name='interventions'
     )
-    statut = models.CharField(max_length=20, choices=STATUS, default='scheduled')
-    fichier_pva = models.FileField(upload_to='pva_files/', blank=True, null=True)
+    statut = models.CharField(max_length=20, choices=STATUS, default='planifiee')
     description = models.TextField(blank=True, null=True)  # description/notes
     notes = models.TextField(blank=True, null=True)
 
