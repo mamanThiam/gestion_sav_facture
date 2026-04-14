@@ -15,27 +15,21 @@ from .models import Client, Ascenseur, Intervention, User
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ["id", "nom", "adresse", "email", "telephone", "personne_de_contact", "ville", "code_postal", "statut", "notes"]
+        fields = ["id", "nom", "adresse", "email", "telephone", "personne_de_contact", "ville", "statut", "notes"]
 
 class AscenseurSerializer(serializers.ModelSerializer):
-    client = ClientSerializer(read_only=True)
-   
+    client = serializers.PrimaryKeyRelatedField(
+            queryset=Client.objects.all()
+        )   
     class Meta:
         model = Ascenseur
         fields = [
                 "id","client", "nom", "emplacement", "modele", "marque",
                 "numero_serie", "charge", "capacite", "nombre_etages",
-                "annee_installation", "statut", "dernier_maintenance",
+                "date_installation", "statut", "dernier_maintenance",
                 "prochain_maintenance", "notes"
             ]
 
-    def create(self, request, *args, **kwargs):
-            print(f"REQUEST DATA: {request.data}")
-            serializer = self.get_serializer(data=request.data)
-            if not serializer.is_valid():
-                print(f"SERIALIZER ERRORS: {serializer.errors}")
-                return response(serializer.errors, status=400)
-            return super().create(request, *args, **kwargs)
 
 
 class InterventionSerializer(serializers.ModelSerializer):

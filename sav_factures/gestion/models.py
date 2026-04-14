@@ -29,7 +29,6 @@ class Client(models.Model):
     telephone = models.CharField(max_length=15)
     personne_de_contact = models.CharField(max_length=255, blank=True, null=True)
     ville = models.CharField(max_length=100, blank=True, null=True)
-    code_postal = models.CharField(max_length=10, blank=True, null=True)
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='actif')
     notes = models.TextField(blank=True, null=True)
 
@@ -67,7 +66,7 @@ class Ascenseur(models.Model):
     )
     capacite = models.CharField(max_length=50, blank=True, null=True)  # capacités
     nombre_etages = models.IntegerField(blank=True, null=True)  # nombre d'étages
-    annee_installation = models.DateField()  # année d'installation
+    date_installation = models.DateField()  # année d'installation
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='operationnel')
     dernier_maintenance = models.DateField(blank=True, null=True)  # dernier jour maintenance
     prochain_maintenance = models.DateField(blank=True, null=True)  # prochain jours maintenance
