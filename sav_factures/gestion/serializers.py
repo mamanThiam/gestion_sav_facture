@@ -17,6 +17,15 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = ["id", "nom", "adresse", "email", "telephone", "personne_de_contact", "ville", "statut", "notes"]
 
+    
+        def create(self, request, *args, **kwargs):
+            print(f"REQUEST DATA: {request.data}")
+            serializer = self.get_serializer(data=request.data)
+            if not serializer.is_valid():
+                print(f"SERIALIZER ERRORS: {serializer.errors}")
+                return response(serializer.errors, status=400)
+            return super().create(request, *args, **kwargs)
+
 class AscenseurSerializer(serializers.ModelSerializer):
     client = serializers.PrimaryKeyRelatedField(
             queryset=Client.objects.all()
