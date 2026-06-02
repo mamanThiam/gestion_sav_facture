@@ -24,9 +24,9 @@ class Client(models.Model):
     ]
     
     nom = models.CharField(max_length=255)
-    adresse = models.TextField()
-    email = models.EmailField(unique=True)
-    telephone = models.CharField(max_length=15)
+    adresse = models.TextField(blank=True, null=True)
+    email = models.EmailField( blank=True, null=True)
+    telephone = models.CharField(max_length=15, blank=True, null=True)
     personne_de_contact = models.CharField(max_length=255, blank=True, null=True)
     ville = models.CharField(max_length=100, blank=True, null=True)
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='actif')
