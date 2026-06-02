@@ -122,10 +122,14 @@ class Intervention(models.Model):
 
 # model User
 class User(models.Model):
+
+    role= [('administrateur', 'Administrateur'), ('technicien', 'Technicien'), ('manager','Manager'),('readonly','Readonly')]
+    statut=[('actif', 'Actif'), ('inactif', 'Inactif')]
+    
     nom = models.CharField(max_length=255)
     email=models.EmailField(unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=50)  # Rôle de l'utilisateur (ex: admin, technicien, etc.)
-    statut=models.CharField(max_length=20, choices=[('actif', 'Actif'), ('inactif', 'Inactif')], default='actif')
+    role = models.CharField(max_length=50, choices=role)  # Rôle de l'utilisateur (ex: admin, technicien, etc.)
+    statut=models.CharField(max_length=20, choices=statut, default='actif')
     def __str__(self):
         return f"{self.user.username} - {self.role}"
