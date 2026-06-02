@@ -56,4 +56,4 @@ class InterventionSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "nom", "email", "role", "statut"]
+        fields = [ "nom", "email", "role", "statut"]
