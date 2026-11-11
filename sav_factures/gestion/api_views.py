@@ -1,16 +1,16 @@
-
 # gestion/api_views.py
 # viewsets.ModelViewSet te fournit automatiquement toutes les routes CRUD.
 # queryset : source des données.
 #serializer_class : comment convertir objets ↔ JSON.
-# permission_classes : pour l'instant AllowAny pour tester rapidement ; on verrouillera plus tard
+# permission_classes : IsAuthenticated (JWT requis) ; la gestion des utilisateurs est réservée aux admins.
 
 from rest_framework import viewsets, permissions
 from .models import Client
 from .serializers import ClientSerializer
 from .models import Ascenseur, Intervention, User
 from .serializers import AscenseurSerializer, InterventionSerializer, UserSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdminRole
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
@@ -23,9 +23,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     """
     queryset = Client.objects.all().order_by('id')
     serializer_class = ClientSerializer
-    # Pour l'instant en dev, on autorise tout.
-    # Plus tard on mettra IsAuthenticated ou des permissions basées sur rôles.
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 
@@ -40,12 +38,7 @@ class AscenseurViewSet(viewsets.ModelViewSet):
     """
     queryset = Ascenseur.objects.all().order_by('id')
     serializer_class = AscenseurSerializer
-    permission_classes = [AllowAny]
-
-    def create(self, request, *args, **kwargs):
-            print(f"REQUEST DATA: {request.data}")
-            print(f"REQUEST ERRORS: {request.errors if hasattr(request, 'errors') else 'None'}")
-            return super().create(request, *args, **kwargs)
+    permission_classes = [IsAuthenticated]
 
 class InterventionViewSet(viewsets.ModelViewSet):
     """
@@ -58,7 +51,7 @@ class InterventionViewSet(viewsets.ModelViewSet):
     """
     queryset = Intervention.objects.all().order_by('id')
     serializer_class = InterventionSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -69,6 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
     PUT/PATCH /api/users/{pk}/ -> modifier
     DELETE /api/users/{pk}/ -> supprimer
     """
+
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminRole]
